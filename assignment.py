@@ -4,12 +4,12 @@
 Finish the implementation of print_UTF8_as_numbers
 """
 
+import sys
+
 def eprint(string):
     """ Prints given string to stderr """
 
     #TODO Implementation
-
-import sys
 
 def print_UTF8_as_numbers(input_bytes):
     """
