@@ -1,0 +1,5 @@
+[ ! -e sorted ] && mkdir sorted;
+for ext in txt pdf jpg; do
+    [ ! -e sorted/$ext ] && mkdir sorted/$ext;
+    [ -e *.$ext ] && mv *.$ext sorted/$ext;
+done;
