@@ -1,0 +1,6 @@
+for f in $(find */* -type f); do
+    mv $f .;
+done;
+for d in $(find -type d -not -name . -and -not -name ..); do
+    rm -r $d;
+done;
