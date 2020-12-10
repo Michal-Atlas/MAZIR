@@ -1,0 +1,7 @@
+echo "Number to be divisor: ";
+read US;
+
+for i in {0..99}; do
+    [[ $(( $i % 2 )) == 0 ]] && echo "even" > $i || echo "odd" > $i;
+    echo $(( $i % $US )) >> $i;    
+done;
