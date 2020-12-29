@@ -31,6 +31,6 @@ int main() {
         } else {
             out_stream = c;
         }
-        printf("0x%X\n", out_stream);
+        printf("%u\n", out_stream);
     }
 }
