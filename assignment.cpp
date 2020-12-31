@@ -17,7 +17,7 @@ byte trim(byte x, byte trim) {
 int main() {
     byte c;
     unsigned long long out_stream = 0; //NOTE Na datový typ této proměnné ses vybodl, že? :) //NOTE Zavádějící název proměnné
-    while (!std::cin.eof() && (std::cin >> c)) { //NOTE No jo, není to C++ krásné? :D
+    while (std::cin >> std::noskipws >> c) { //NOTE No jo, není to C++ krásné? :D
         if (if_bit_one(c, 7)) { /// Checks if the byte is ascii or UTF
             int limit = 7; //NOTE Nic neříkající název proměnné
             while (if_bit_one(c, limit)) limit--; /// Finds how many 1s before the first 0
