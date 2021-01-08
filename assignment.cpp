@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstddef>
+#include <vector>
 
 typedef unsigned char byte;
 
@@ -14,25 +15,29 @@ byte trim(byte x, byte trim) {
     return ((UINT8_MAX) >> (trim)) & x;
 }
 
+typedef uint16_t utf8_point;
+
 int main() {
     byte c;
-    unsigned long long out_stream = 0; //NOTE Na datový typ této proměnné ses vybodl, že? :) //NOTE Zavádějící název proměnné
-    while (std::cin >> std::noskipws >> c) { //NOTE No jo, není to C++ krásné? :D
-        if (if_bit_one(c, 7)) { /// Checks if the byte is ascii or UTF
-            int limit = 7; //NOTE Nic neříkající název proměnné
-            while (if_bit_one(c, limit)) limit--; /// Finds how many 1s before the first 0
-            for (int i = 7 - limit; i > 0; --i) { //NOTE Tohle fakt nečitelný for loop
-                if (std::cin.eof()) { return 1; }
-                if (i == 7 - limit) { /// Length defining byte //NOTE Lepší mít místo special case na první průchod cyklu tohle mimo cyklus? :)
-                    out_stream = trim(c, 7 - limit);
-                } else { /// Continuing byte
-                    std::cin >> c;
-                    out_stream = (out_stream << 0x6) | trim(c, 0x2); //NOTE To 0x6 je zavádějící mít hexadecimálně. Tím, že je to hexadecimálně dáváš většinou najevo, že je důležitý binární/hexadecimální zápis spíš než samotná hodnota
-                }
-            }
-        } else { //NOTE Obecně je vhodná snaha mít co nejmíň vnořený kód. Zvyšuje to čitelnost. Použil bych continue
-            out_stream = c;
+    std::vector<utf8_point> out;
+    utf8_point char_buffer = 0;
+    while (std::cin >> std::noskipws >> c) {
+        if (!if_bit_one(c, 7)) { /// Checks if the byte is ascii
+            out.push_back(c);
+            continue;
         }
-        printf("%u\n", out_stream);
+        int limit = 7; //NOTE Nic neříkající název proměnné
+        while (if_bit_one(c, limit)) limit--; /// Finds how many 1s before the first 0
+        char_buffer = trim(c, 7 - limit); /// Length defining byte
+        for (int i = 7 - limit - 1; i > 0; --i) { //NOTE Tohle fakt nečitelný for loop
+            if (std::cin.eof()) { return 1; }
+            std::cin >> c;
+            char_buffer = (char_buffer << 6) | trim(c, 0x2);
+        }
+        out.push_back(char_buffer);
+        char_buffer = 0;
+    }
+    for(byte c : out){
+        printf("%u\n", c); 
     }
 }
