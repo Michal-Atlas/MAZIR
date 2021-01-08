@@ -31,7 +31,7 @@ int main() {
         int leading_ones = 0;
         while (if_bit_one(c, leading_ones)) leading_ones++; /// Finds how many 1s before the first 0
         char_buffer = trim(c, leading_ones); /// Length defining byte
-        for (int i = 1; i < leading_ones; ++i) { //NOTE Tohle fakt nečitelný for loop
+        for (; leading_ones > 1; --leading_ones) { //NOTE Tohle fakt nečitelný for loop
             if (std::cin.eof()) { return 1; }
             std::cin >> c;
             if (!(if_bit_one(c, 0) && !if_bit_one(c, 1))) { throw std::logic_error("didn't get continuing byte"); }
@@ -39,8 +39,8 @@ int main() {
         }
         out.push_back(char_buffer);
     }
-    for (byte i : out) {
-        printf("%u\n", i);
+    for (auto i : out) {
+        std::cout << i << std::endl;
     }
     return 0;
 }
