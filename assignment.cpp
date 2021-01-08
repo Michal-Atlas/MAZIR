@@ -26,10 +26,10 @@ int main() {
             out.push_back(c);
             continue;
         }
-        int limit = 7; //NOTE Nic neříkající název proměnné
-        while (if_bit_one(c, limit)) limit--; /// Finds how many 1s before the first 0
-        char_buffer = trim(c, 7 - limit); /// Length defining byte
-        for (int i = 7 - limit - 1; i > 0; --i) { //NOTE Tohle fakt nečitelný for loop
+        int leading_ones = 7;
+        while (if_bit_one(c, leading_ones)) leading_ones--; /// Finds how many 1s before the first 0
+        char_buffer = trim(c, 7 - leading_ones); /// Length defining byte
+        for (int i = 7 - leading_ones - 1; i > 0; --i) { //NOTE Tohle fakt nečitelný for loop
             if (std::cin.eof()) { return 1; }
             std::cin >> c;
             char_buffer = (char_buffer << 6) | trim(c, 0x2);
@@ -38,6 +38,6 @@ int main() {
         char_buffer = 0;
     }
     for(byte c : out){
-        printf("%u\n", c); 
+        printf("%u\n", c);
     }
 }
