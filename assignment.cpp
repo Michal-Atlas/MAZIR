@@ -1,6 +1,4 @@
 #include <iostream>
-#include <cstddef>
-#include <vector>
 
 typedef unsigned char byte;
 
@@ -21,11 +19,10 @@ typedef uint16_t utf8_point;
 
 int main() {
     byte c;
-    std::vector<utf8_point> out;
     utf8_point char_buffer = 0;
     while (std::cin >> std::noskipws >> c) {
         if (!if_bit_one(c, 0)) { /// Checks if the byte is ascii
-            out.push_back(c);
+            printf("%u\n", c);
             continue;
         }
         int leading_ones = 0;
@@ -37,10 +34,7 @@ int main() {
             if (!(if_bit_one(c, 0) && !if_bit_one(c, 1))) { throw std::logic_error("didn't get continuing byte"); }
             char_buffer = (char_buffer << 6) | trim(c, 0x2);
         }
-        out.push_back(char_buffer);
-    }
-    for (auto i : out) {
-        std::cout << i << std::endl;
+        printf("%u\n", char_buffer);
     }
     return 0;
 }
