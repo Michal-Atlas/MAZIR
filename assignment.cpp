@@ -3,6 +3,7 @@
 typedef unsigned char byte;
 
 //NOTE Exception handling
+//NOTE Sjednoť, jestli používáš funkce typu printf/scanf nebo streamy
 
 /// Checks if nth bit from the left is a one
 bool if_bit_one(byte x, uint8_t position) {
@@ -28,9 +29,10 @@ int main() {
         int leading_ones = 0;
         while (if_bit_one(c, leading_ones)) leading_ones++; /// Finds how many 1s before the first 0
         char_buffer = trim(c, leading_ones); /// Length defining byte
-        for (; leading_ones > 1; --leading_ones) { //NOTE Tohle fakt nečitelný for loop
+        for (; leading_ones > 1; --leading_ones) { 
             if (std::cin.eof()) { return 1; }
             std::cin >> c;
+	    //NOTE Spíš pomocí masky
             if (!(if_bit_one(c, 0) && !if_bit_one(c, 1))) { throw std::logic_error("didn't get continuing byte"); }
             char_buffer = (char_buffer << 6) | trim(c, 0x2);
         }
