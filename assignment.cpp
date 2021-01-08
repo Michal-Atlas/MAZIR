@@ -6,7 +6,7 @@ typedef unsigned char byte;
 
 /// Checks if nth bit from the left is a one
 bool if_bit_one(byte x, uint8_t position) {
-    if (position > 7) { throw std::overflow_error("Checked bit outside range of byte"); }
+    if (position > 7) { throw std::overflow_error("checked bit outside range of byte"); }
     return x & (0x80 >> position);
 }
 
@@ -15,7 +15,7 @@ byte trim(byte x, byte trim) {
     return ((UINT8_MAX) >> (trim)) & x;
 }
 
-typedef uint16_t utf8_point;
+typedef uint32_t utf8_point;
 
 int main() {
     byte c;
