@@ -17,7 +17,7 @@ typedef uint32_t utf8_point;
 
 int main() {
     byte c;
-    utf8_point char_buffer = 0;
+    utf8_point char_buffer;
     while (std::cin >> std::noskipws >> c) {
         if (!if_bit_one(c, 0)) { /// Checks if the byte is ascii
             std::cout << unsigned(c) << std::endl;
