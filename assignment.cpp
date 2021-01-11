@@ -2,9 +2,6 @@
 
 typedef unsigned char byte;
 
-//NOTE Exception handling
-//NOTE Sjednoť, jestli používáš funkce typu printf/scanf nebo streamy
-
 /// Checks if nth bit from the left is a one
 bool if_bit_one(byte x, uint8_t position) {
     if (position > 7) throw std::overflow_error("checked bit outside range of byte");
@@ -23,7 +20,7 @@ int main() {
     utf8_point char_buffer = 0;
     while (std::cin >> std::noskipws >> c) {
         if (!if_bit_one(c, 0)) { /// Checks if the byte is ascii
-            printf("%u\n", c);
+            std::cout << unsigned(c) << std::endl;
             continue;
         }
         int leading_ones = 0;
@@ -35,7 +32,7 @@ int main() {
             if (!(if_bit_one(c, 0) && !if_bit_one(c, 1))) throw std::logic_error("didn't get continuing byte");
             char_buffer = (char_buffer << 6) | trim(c, 0x2);
         }
-        printf("%u\n", char_buffer);
+        std::cout << unsigned(char_buffer) << std::endl;
     }
     return 0;
 }
