@@ -161,6 +161,15 @@ void destroy(LinkedList* linkedList) {
     }
 }
 
+LinkedList* createSequenceInLInkedList() {
+    LinkedList *linkedList = malloc(sizeof(LinkedList));
+    init(linkedList);
+    for(int i = 1; i <= 100; i++) {
+        append(linkedList, i);
+    }
+    return linkedList;
+}
+
 int main () {
     LinkedList linkedList;
     init(&linkedList);
