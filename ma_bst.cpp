@@ -2,33 +2,32 @@
 #include <memory>
 
 template<typename K, typename T>
-struct bs_node {
+struct bs_map_node {
 private:
     std::pair<K, T> value;
 public:
-    std::shared_ptr<bs_node<K, T>> left, right;
+    std::shared_ptr<bs_map_node<K, T>> left, right;
 
     K &get_key() { return value.first; }
 
     T &get_value() { return value.second; }
 
-    explicit bs_node(std::pair<K, T> _pair) {
+    explicit bs_map_node(std::pair<K, T> _pair) {
         value = _pair;
     }
 
     T &operator[](K idx) {
-        bs_node<T, K> *cursor = this;
+        bs_map_node<T, K> *cursor = this;
         while (idx != cursor->get_key()) {
             if (idx < cursor->get_key()) {
                 if (!left) { return value.second; }
-                cursor = left.get();
-            }
-            if (idx > cursor->get_key()) {
+                cursor = cursor->left.get();
+            } else if (idx > cursor->get_key()) {
                 if (!right) { return value.second; }
-                cursor = right.get();
+                cursor = cursor->right.get();
             }
         }
-        return get_value();
+        return cursor->get_value();
     }
 
     bool key_exists(K key) {
@@ -51,21 +50,37 @@ public:
             if (left) {
                 left->insert(_pair);
             } else {
-                left = std::make_shared<bs_node<K, T>>(_pair);
+                left = std::make_shared<bs_map_node<K, T>>(_pair);
             }
         }
         if (_pair.first > get_key()) {
             if (right) {
                 right->insert(_pair);
             } else {
-                right = std::make_shared<bs_node<K, T>>(_pair);
+                right = std::make_shared<bs_map_node<K, T>>(_pair);
             }
         }
     }
 };
 
+std::string print_int_node(bs_map_node<int, int> &_node) {
+    return
+            (_node.left ? print_int_node(*_node.left) + "\n" : "") +
+            std::to_string(_node.get_key()) + " " + std::to_string(_node.get_value()) +
+            (_node.right ? "\n" + print_int_node(*_node.right) : "");
+}
+
 int main() {
-    bs_node<int, int> root{std::pair<int, int>(0, 42)};
-    root.insert({5, 5});
-    std::cout << (root[5]) << (root[0]) << (root.key_exists(5) ? "1" : "0") << std::endl;
+    int in;
+    std::cin >> in;
+    bs_map_node<int, int> root{std::pair<int, int>(in, 1)};
+
+    while (std::cin >> in) {
+        if (root.key_exists(in)) {
+            root[in]++;
+        } else {
+            root.insert({in, 1});
+        }
+    }
+    std::cout << print_int_node(root) << std::endl;
 }
