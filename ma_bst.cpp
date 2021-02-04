@@ -67,6 +67,53 @@ public:
             }
         }
     }
+
+    void insert(std::shared_ptr<bs_map_node<K, T>> _node) {
+        if (_node->get_key() == get_key()) { return; }
+        if (_node->get_key() < get_key()) {
+            if (left) {
+                left->insert(_node);
+            } else {
+                left = _node;
+            }
+        }
+        if (_node->get_key() > get_key()) {
+            if (right) {
+                right->insert(_node);
+            } else {
+                right = _node;
+            }
+        }
+    }
+
+    /// Removes a Node by Key and preserves its children.
+    void remove(T target) {
+        auto cursor = this;
+        while (cursor->left || cursor->right) {
+            if (cursor->left && cursor->left->get_key() == target) {
+                auto left_carry = cursor->left->left;
+                auto right_carry = cursor->left->right;
+                cursor->left = nullptr;
+                if (left_carry) { insert(left_carry); }
+                if (right_carry) { insert(right_carry); }
+                return;
+            }
+            if (cursor->right && cursor->right->get_key() == target) {
+                auto left_carry = cursor->right->left;
+                auto right_carry = cursor->right->right;
+                cursor->right = nullptr;
+                if (left_carry) { insert(left_carry); }
+                if (right_carry) { insert(right_carry); }
+                return;
+            }
+
+            if (cursor->get_key() < target) {
+                cursor = cursor->left.get();
+            } else if (cursor->get_key() > target) {
+                cursor = cursor->right.get();
+            } else { return; }
+        }
+    }
 };
 
 std::string print_int_node(bs_map_node<int, int> &_node) {
