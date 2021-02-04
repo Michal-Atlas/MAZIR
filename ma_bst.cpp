@@ -140,17 +140,12 @@ std::string print_int_node(bs_map_node<int, int> &_node) {
 }
 
 int main() {
-    bs_map_node<int, int> root{std::pair<int, int>(5, 1)};
-    root[20] = 3;
-    root[8] = 13;
-    root.remove(5);
-    root[4156] = 43;
-    /*int in;
+    int in;
     std::cin >> in;
     bs_map_node<int, int> root{std::pair<int, int>(in, 1)};
 
     while (std::cin >> in) {
             root[in]++;
     }
-    std::cout << print_int_node(root) << std::endl;*/
+    std::cout << print_int_node(root) << std::endl;
 }
