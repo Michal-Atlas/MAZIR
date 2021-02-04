@@ -107,9 +107,9 @@ public:
                 return;
             }
 
-            if (cursor->get_key() < target) {
+            if (cursor->get_key() < target && cursor->left) {
                 cursor = cursor->left.get();
-            } else if (cursor->get_key() > target) {
+            } else if (cursor->get_key() > target && cursor->right) {
                 cursor = cursor->right.get();
             } else { return; }
         }
@@ -124,12 +124,18 @@ std::string print_int_node(bs_map_node<int, int> &_node) {
 }
 
 int main() {
-    int in;
+    bs_map_node<int, int> root{std::pair<int, int>(5, 1)};
+    root[20] = 3;
+    root[8] = 13;
+    root[4156] = 43;
+    root.remove(8);
+    root.remove(20);
+    /*int in;
     std::cin >> in;
     bs_map_node<int, int> root{std::pair<int, int>(in, 1)};
 
     while (std::cin >> in) {
             root[in]++;
     }
-    std::cout << print_int_node(root) << std::endl;
+    std::cout << print_int_node(root) << std::endl;*/
 }
