@@ -39,50 +39,50 @@ public:
     bool key_exists(K key) {
         if (key == get_key()) return true;
         if (key < get_key()) {
-            if (left) {
+            if (left)
                 return left->key_exists(key);
-            } else return false;
+            else return false;
         }
         if (key > get_key()) {
-            if (right) {
+            if (right)
                 return right->key_exists(key);
-            } else return false;
+            else return false;
         }
     }
 
     void insert(std::pair<K, T> _pair) {
-        if (_pair.first == get_key()) { return; }
+        if (_pair.first == get_key()) return;
         if (_pair.first < get_key()) {
-            if (left) {
+            if (left)
                 left->insert(_pair);
-            } else {
+            else
                 left = std::make_shared<bs_map_node<K, T>>(_pair);
-            }
+
         }
         if (_pair.first > get_key()) {
-            if (right) {
+            if (right)
                 right->insert(_pair);
-            } else {
+            else
                 right = std::make_shared<bs_map_node<K, T>>(_pair);
-            }
+
         }
     }
 
     void insert(std::shared_ptr<bs_map_node<K, T>> _node) {
-        if (_node->get_key() == get_key()) { return; }
+        if (_node->get_key() == get_key()) return;
         if (_node->get_key() < get_key()) {
-            if (left) {
+            if (left)
                 left->insert(_node);
-            } else {
+            else
                 left = _node;
-            }
+
         }
         if (_node->get_key() > get_key()) {
-            if (right) {
+            if (right)
                 right->insert(_node);
-            } else {
+            else
                 right = _node;
-            }
+
         }
     }
 
@@ -110,24 +110,24 @@ public:
                 auto left_carry = cursor->left->left;
                 auto right_carry = cursor->left->right;
                 cursor->left = nullptr;
-                if (left_carry) { insert(left_carry); }
-                if (right_carry) { insert(right_carry); }
+                if (left_carry) insert(left_carry);
+                if (right_carry) insert(right_carry);
                 return;
             }
             if (cursor->right && cursor->right->get_key() == target) {
                 auto left_carry = cursor->right->left;
                 auto right_carry = cursor->right->right;
                 cursor->right = nullptr;
-                if (left_carry) { insert(left_carry); }
-                if (right_carry) { insert(right_carry); }
+                if (left_carry) insert(left_carry);
+                if (right_carry) insert(right_carry);
                 return;
             }
 
-            if (cursor->get_key() < target && cursor->left) {
+            if (cursor->get_key() < target && cursor->left)
                 cursor = cursor->left.get();
-            } else if (cursor->get_key() > target && cursor->right) {
+            else if (cursor->get_key() > target && cursor->right)
                 cursor = cursor->right.get();
-            } else { return; }
+            else return;
         }
     }
 };
