@@ -129,11 +129,7 @@ int main() {
     bs_map_node<int, int> root{std::pair<int, int>(in, 1)};
 
     while (std::cin >> in) {
-        if (root.key_exists(in)) {
             root[in]++;
-        } else {
-            root.insert({in, 1});
-        }
     }
     std::cout << print_int_node(root) << std::endl;
 }
