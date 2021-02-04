@@ -15,15 +15,21 @@ public:
     explicit bs_map_node(std::pair<K, T> _pair) {
         value = _pair;
     }
-
+    // Returns a value from provided key, if the key does not exist, it is created and instantiated to 0, then returned as normal
     T &operator[](K idx) {
         bs_map_node<T, K> *cursor = this;
         while (idx != cursor->get_key()) {
             if (idx < cursor->get_key()) {
-                if (!left) { return value.second; }
+                if (!cursor->left) {
+                    cursor->left = std::make_shared<bs_map_node<K, T>>(bs_map_node<K, T>({idx, 0}));
+                    return cursor->left->get_value();
+                }
                 cursor = cursor->left.get();
             } else if (idx > cursor->get_key()) {
-                if (!right) { return value.second; }
+                if (!cursor->right) {
+                    cursor->right = std::make_shared<bs_map_node<K, T>>(bs_map_node<K, T>({idx, 0}));
+                    return cursor->right->get_value();
+                }
                 cursor = cursor->right.get();
             }
         }
