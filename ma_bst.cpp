@@ -86,8 +86,24 @@ public:
         }
     }
 
-    /// Removes a Node by Key and preserves its children.
+    /// Removes a Node by Key and preserves its children. When deleting root, Left has precedence in becoming root.
     void remove(T target) {
+        if (target == this->get_key()) {
+            if (left) {
+                auto right_carry = right;
+                this->value = left->value;
+                this->left = left->left ? left->left : nullptr;
+                this->right = left->right ? left->right : nullptr;
+                insert(right);
+                return;
+            } else if (right) {
+                this->value = right->value;
+                this->left = right->left ? right->left : nullptr;
+                this->right = right->right ? right->right : nullptr;
+                return;
+            }
+        }
+
         auto cursor = this;
         while (cursor->left || cursor->right) {
             if (cursor->left && cursor->left->get_key() == target) {
@@ -127,9 +143,8 @@ int main() {
     bs_map_node<int, int> root{std::pair<int, int>(5, 1)};
     root[20] = 3;
     root[8] = 13;
+    root.remove(5);
     root[4156] = 43;
-    root.remove(8);
-    root.remove(20);
     /*int in;
     std::cin >> in;
     bs_map_node<int, int> root{std::pair<int, int>(in, 1)};
