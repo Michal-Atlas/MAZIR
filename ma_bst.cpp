@@ -94,7 +94,7 @@ public:
                 this->value = left->value;
                 this->left = left->left ? left->left : nullptr;
                 this->right = left->right ? left->right : nullptr;
-                insert(right);
+                if (right_carry) insert(right_carry);
                 return;
             } else if (right) {
                 this->value = right->value;
