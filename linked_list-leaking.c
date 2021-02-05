@@ -9,16 +9,20 @@ struct Node {
 };
 
 typedef struct {
-    Node* head; // NULL if LinkedList is empty
+    Node *head; // NULL if LinkedList is empty
+    Node *tail;
+    Node *second_to_tail;
 } LinkedList;
 
 void init(LinkedList* linkedList) {
     // NULL head means empty list
     linkedList->head = NULL;
+    linkedList->tail = NULL;
+    linkedList->second_to_tail = NULL;
 }
 
 LinkedList* create() {
-    LinkedList* linkedList = (LinkedList*) malloc(sizeof(LinkedList));
+    LinkedList *linkedList = (LinkedList *) malloc(sizeof(LinkedList));
 
     // NOTE Find out why is this if here
     // Memory allocation can fail, either from insufficient memory or high latency
@@ -49,16 +53,11 @@ void append(LinkedList* linkedList, int value) {
         return;
     }
 
-    // Find last node
-    Node* lastNode = linkedList->head;
-    while (lastNode->next != linkedList->head) {
-      lastNode = lastNode->next;
-    }
-
     // Insert it
-    lastNode->next = newNode;
+    linkedList->second_to_tail = linkedList->tail;
+    linkedList->tail->next = newNode;
     newNode->next = linkedList->head;
-
+    linkedList->tail = newNode;
 }
 
 int popLast(LinkedList* linkedList) {
