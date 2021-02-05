@@ -84,12 +84,12 @@ int popLast(LinkedList *linkedList) {
     }
 
     // Relink
-    Node *ntail = linkedList->head->last->last;
+    Node *new_tail = linkedList->head->last->last;
     int returnValue = linkedList->head->last->value;
 
     free(linkedList->head->last);
-    ntail->next = linkedList->head;
-    linkedList->head->last = ntail;
+    new_tail->next = linkedList->head;
+    linkedList->head->last = new_tail;
 
     return returnValue;
 }
@@ -170,7 +170,7 @@ LinkedList* createSequenceInLInkedList() {
 
 int main () {
     LinkedList *a = createSequenceInLInkedList();
-    free(a);
+    destroy(a);
     LinkedList linkedList;
     init(&linkedList);
     append(&linkedList, 1);
