@@ -139,7 +139,7 @@ void print(LinkedList* linkedList) {
     }
 
     // Print every node
-    Node* iterator = linkedList->head;
+    Node *iterator = linkedList->head;
     while (iterator->next != linkedList->head) {
         printf("[%p] value: %d next: %p\n", iterator, iterator->value, iterator->next);
         iterator = iterator->next;
@@ -147,11 +147,18 @@ void print(LinkedList* linkedList) {
     printf("[%p] value: %d next: %p\n", iterator, iterator->value, iterator->next);
 }
 
-void destroy(LinkedList* linkedList) {
+void remove_node(LinkedList *linkedList, int value) {
+    Node *old_head = linkedList->head;
+    linkedList->head = find(linkedList, value);
+    popFirst(linkedList);
+    linkedList->head = old_head;
+}
+
+void destroy(LinkedList *linkedList) {
     if (!isEmpty(linkedList)) {
-        Node* iterator = linkedList->head;
+        Node *iterator = linkedList->head;
         while (iterator->next != linkedList->head) {
-            Node* toBeFreed = iterator;
+            Node *toBeFreed = iterator;
             iterator = iterator->next;
             free(toBeFreed);
         }
