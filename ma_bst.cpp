@@ -15,20 +15,28 @@ public:
     explicit bs_map_node(std::pair<K, T> _pair) {
         value = _pair;
     }
-    // Returns a value from provided key, if the key does not exist, it is created and instantiated to 0, then returned as normal
+    // Returns a value from provided key, if the key does not exist and the type is simple, it is created and instantiated to 0, then returned as normal
     T &operator[](K idx) {
         bs_map_node<T, K> *cursor = this;
         while (idx != cursor->get_key()) {
             if (idx < cursor->get_key()) {
                 if (!cursor->left) {
-                    cursor->left = std::make_shared<bs_map_node<K, T>>(bs_map_node<K, T>({idx, 0}));
-                    return cursor->left->get_value();
+                    if (!std::is_class<T>::value) {
+                        cursor->left = std::make_shared<bs_map_node<K, T>>(bs_map_node<K, T>({idx, 0}));
+                        return cursor->left->get_value();
+                    } else
+                        throw std::runtime_error(
+                                "Attempted to access nonexistent pair that could not be auto-instantiated.");
                 }
                 cursor = cursor->left.get();
             } else if (idx > cursor->get_key()) {
                 if (!cursor->right) {
-                    cursor->right = std::make_shared<bs_map_node<K, T>>(bs_map_node<K, T>({idx, 0}));
-                    return cursor->right->get_value();
+                    if (!std::is_class<T>::value) {
+                        cursor->right = std::make_shared<bs_map_node<K, T>>(bs_map_node<K, T>({idx, 0}));
+                        return cursor->right->get_value();
+                    } else
+                        throw std::runtime_error(
+                                "Attempted to access nonexistent pair that could not be auto-instantiated.");
                 }
                 cursor = cursor->right.get();
             }
