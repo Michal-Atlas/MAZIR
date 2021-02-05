@@ -21,7 +21,10 @@ LinkedList* create() {
     LinkedList* linkedList = (LinkedList*) malloc(sizeof(LinkedList));
 
     // NOTE Find out why is this if here
-    if (linkedList == NULL) { 
+    // Memory allocation can fail, either from insufficient memory or high latency
+    // Compiling with incorrect specifications seems to also be a thing, as some systems reserve certain memory
+    // A 0 pointer may even sometimes be valid apparently
+    if (linkedList == NULL) {
         return NULL;
     }
 
