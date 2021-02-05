@@ -47,14 +47,15 @@ void append(LinkedList* linkedList, int value) {
     if (isEmpty(linkedList)) {
         linkedList->head = newNode;
         newNode->next = linkedList->head;
+        newNode->last = linkedList->head;
         return;
     }
 
     // Insert it
-    linkedList->head->last->last = linkedList->head->last;
-    linkedList->head->last->next = newNode;
     newNode->next = linkedList->head;
+    newNode->last = linkedList->head->last;
     linkedList->head->last = newNode;
+    linkedList->head->last->last->next = newNode;
 }
 
 Node *find(LinkedList *linkedList, int target) {
@@ -95,7 +96,7 @@ int popLast(LinkedList *linkedList) {
 
 void prepend(LinkedList* linkedList, int value) {
 
-    // Create new node
+    /*// Create new node
     Node* newNode = (Node*) malloc(sizeof(Node));
     newNode->value = value;
 
@@ -104,14 +105,10 @@ void prepend(LinkedList* linkedList, int value) {
         linkedList->head = newNode;
         newNode->next = linkedList->head;
         return;
-    }
+    }*/
 
     // Insert
-    linkedList->head->last->next = newNode;
-    newNode->next = linkedList->head;
-    newNode->last = linkedList->head->last;
-    linkedList->head->last->next = newNode;
-    linkedList->head->last = newNode;
+    append(linkedList, value);
     linkedList->head = linkedList->head->last;
 }
 
@@ -172,6 +169,8 @@ LinkedList* createSequenceInLInkedList() {
 }
 
 int main () {
+    LinkedList *a = createSequenceInLInkedList();
+    free(a);
     LinkedList linkedList;
     init(&linkedList);
     append(&linkedList, 1);
@@ -179,7 +178,7 @@ int main () {
     append(&linkedList, 3);
     prepend(&linkedList, 0);
     while (!isEmpty(&linkedList)) {
-        printf("%d\n", popLast(&linkedList)); 
+        printf("%d\n", popLast(&linkedList));
     }
     prepend(&linkedList, 99);
     prepend(&linkedList, 98);
