@@ -5,20 +5,17 @@
 typedef struct Node Node;
 struct Node {
     Node* next; // Last element points back to head
+    Node *last;
     int value;
 };
 
 typedef struct {
     Node *head; // NULL if LinkedList is empty
-    Node *tail;
-    Node *second_to_tail;
 } LinkedList;
 
 void init(LinkedList* linkedList) {
     // NULL head means empty list
     linkedList->head = NULL;
-    linkedList->tail = NULL;
-    linkedList->second_to_tail = NULL;
 }
 
 LinkedList* create() {
@@ -54,13 +51,27 @@ void append(LinkedList* linkedList, int value) {
     }
 
     // Insert it
-    linkedList->second_to_tail = linkedList->tail;
-    linkedList->tail->next = newNode;
+    linkedList->head->last->last = linkedList->head->last;
+    linkedList->head->last->next = newNode;
     newNode->next = linkedList->head;
-    linkedList->tail = newNode;
+    linkedList->head->last = newNode;
 }
 
-int popLast(LinkedList* linkedList) {
+Node *find(LinkedList *linkedList, int target) {
+    Node *cursor = linkedList->head;
+
+    while (cursor->value != target) {
+        if (cursor->next == NULL) { return NULL; }
+        cursor = cursor->next;
+    }
+    return cursor;
+}
+
+bool member(LinkedList *linkedList, int target) {
+    return find(linkedList, target) != NULL;
+}
+
+int popLast(LinkedList *linkedList) {
     // if linkedList is empty, program crashes with dereferencing NULL pointer
 
     // Only one node left
@@ -71,16 +82,14 @@ int popLast(LinkedList* linkedList) {
         return returnValue;
     }
 
-    // Find second to last node
-    Node* secondToLastNode = linkedList->head;
-    while (secondToLastNode->next->next != linkedList->head) {
-        secondToLastNode = secondToLastNode->next;
-    }
-
     // Relink
-    int returnValue = secondToLastNode->next->value;
-    free(secondToLastNode->next);
-    secondToLastNode->next = linkedList->head;
+    Node *ntail = linkedList->head->last->last;
+    int returnValue = linkedList->head->last->value;
+
+    free(linkedList->head->last);
+    ntail->next = linkedList->head;
+    linkedList->head->last = ntail;
+
     return returnValue;
 }
 
@@ -97,21 +106,18 @@ void prepend(LinkedList* linkedList, int value) {
         return;
     }
 
-    // Find last node
-    Node* lastNode = linkedList->head;
-    while (lastNode->next != linkedList->head) {
-      lastNode = lastNode->next;
-    }
-
     // Insert
-    lastNode->next = newNode;
-    newNode->next = linkedList->head; //Old head
-    linkedList->head = newNode;
+    linkedList->head->last->next = newNode;
+    newNode->next = linkedList->head;
+    newNode->last = linkedList->head->last;
+    linkedList->head->last->next = newNode;
+    linkedList->head->last = newNode;
+    linkedList->head = linkedList->head->last;
 }
 
 int popFirst(LinkedList* linkedList) {
     // if linkedList is empty, program crashes with dereferencing NULL pointer
-    
+
     // Only one node left
     if (linkedList->head->next == linkedList->head) {
         int returnValue = linkedList->head->value;
@@ -120,17 +126,10 @@ int popFirst(LinkedList* linkedList) {
         return returnValue;
     }
 
-    // Find last node
-    Node* lastNode = linkedList->head;
-    while (lastNode->next != linkedList->head) {
-      lastNode = lastNode->next;
-    }
-
     // Relink
-    lastNode->next = linkedList->head->next;
-    int returnValue = linkedList->head->value;
-    free(linkedList->head);
-    linkedList->head = lastNode->next;
+    linkedList->head = linkedList->head->last;
+    int returnValue = popLast(linkedList);
+    linkedList->head = linkedList->head->next;
     return returnValue;
 }
 
