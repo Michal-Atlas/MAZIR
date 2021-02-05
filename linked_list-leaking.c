@@ -170,13 +170,16 @@ LinkedList* createSequenceInLInkedList() {
 
 int main () {
     LinkedList *a = createSequenceInLInkedList();
+    print(a);
     destroy(a);
+    free(a); // I'm not sure why this has to be here, but sure.
     LinkedList linkedList;
     init(&linkedList);
     append(&linkedList, 1);
     append(&linkedList, 2);
     append(&linkedList, 3);
     prepend(&linkedList, 0);
+    print(&linkedList);
     while (!isEmpty(&linkedList)) {
         printf("%d\n", popLast(&linkedList));
     }
