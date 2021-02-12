@@ -104,9 +104,9 @@ public:
     /// Removes a Node by Key and preserves its children. When deleting root, Left has precedence in becoming root.
     /// The deleted node is not .
     void remove(T target) {
-        if (target == this->get_key()) {
+        if (target == this->get_key()) { // If Root is the target
             if (left) {
-                auto right_carry = right;
+                auto right_carry = right; // Transfers the values so that the origin pointer stays the same
                 this->value = left->value;
                 this->left = left->left ? left->left : nullptr;
                 this->right = left->right ? left->right : nullptr;
@@ -122,7 +122,7 @@ public:
 
         auto cursor = this;
         while (cursor->left || cursor->right) {
-            //
+            // Finds and transfers
             if (cursor->left && cursor->left->get_key() == target) {
                 auto left_carry = cursor->left->left;
                 auto right_carry = cursor->left->right;
@@ -139,7 +139,7 @@ public:
                 if (right_carry) insert(right_carry);
                 return;
             }
-
+            // Traverse
             if (cursor->get_key() < target && cursor->left)
                 cursor = cursor->left.get();
             else if (cursor->get_key() > target && cursor->right)
