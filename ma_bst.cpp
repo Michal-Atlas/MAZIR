@@ -1,7 +1,11 @@
+#include <stdexcept>
+
 #include <iostream>
 #include <memory>
 
 template<typename K, typename T>
+/// A self-referencing object that behaves as a pair holding binary search tree with a std::map-like interface
+/// Defined with a key and value type
 struct bs_map_node {
 private:
     std::pair<K, T> value;
@@ -15,12 +19,13 @@ public:
     explicit bs_map_node(std::pair<K, T> _pair) {
         value = _pair;
     }
-    // Returns a value from provided key, if the key does not exist and the type is simple, it is created and instantiated to 0, then returned as normal
+
+    /// Returns a value from provided key, if the key does not exist and the type is simple, it is created and instantiated to 0, then returned as normal
     T &operator[](K idx) {
         bs_map_node<T, K> *cursor = this;
         while (idx != cursor->get_key()) {
             if (idx < cursor->get_key()) {
-                if (!cursor->left) {
+                if (!cursor->left) { // Nonexistent key
                     if (!std::is_class<T>::value) {
                         cursor->left = std::make_shared<bs_map_node<K, T>>(bs_map_node<K, T>({idx, 0}));
                         return cursor->left->get_value();
@@ -30,7 +35,7 @@ public:
                 }
                 cursor = cursor->left.get();
             } else if (idx > cursor->get_key()) {
-                if (!cursor->right) {
+                if (!cursor->right) { // Nonexistent key
                     if (!std::is_class<T>::value) {
                         cursor->right = std::make_shared<bs_map_node<K, T>>(bs_map_node<K, T>({idx, 0}));
                         return cursor->right->get_value();
@@ -58,6 +63,7 @@ public:
         }
     }
 
+    /// Implemented recursively
     void insert(std::pair<K, T> _pair) {
         if (_pair.first == get_key()) return;
         if (_pair.first < get_key()) {
@@ -76,6 +82,7 @@ public:
         }
     }
 
+    /// Implemented recursively
     void insert(std::shared_ptr<bs_map_node<K, T>> _node) {
         if (_node->get_key() == get_key()) return;
         if (_node->get_key() < get_key()) {
@@ -95,6 +102,7 @@ public:
     }
 
     /// Removes a Node by Key and preserves its children. When deleting root, Left has precedence in becoming root.
+    /// The deleted node is not .
     void remove(T target) {
         if (target == this->get_key()) {
             if (left) {
@@ -114,6 +122,7 @@ public:
 
         auto cursor = this;
         while (cursor->left || cursor->right) {
+            //
             if (cursor->left && cursor->left->get_key() == target) {
                 auto left_carry = cursor->left->left;
                 auto right_carry = cursor->left->right;
@@ -153,7 +162,7 @@ int main() {
     bs_map_node<int, int> root{std::pair<int, int>(in, 1)};
 
     while (std::cin >> in) {
-            root[in]++;
+        root[in]++;
     }
     std::cout << print_int_node(root) << std::endl;
 }
