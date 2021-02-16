@@ -11,12 +11,12 @@ struct ms_node {
     bool marked = false, observed = false;
 
     void mark_refs() {
-        std::for_each(neighbours.begin(), neighbours.end(), [](ms_node *node) {
+        for (auto *node : neighbours) {
             if (!node->marked) {
                 node->marked = true;
                 node->mark_refs();
             }
-        });
+        }
     }
 };
 
@@ -43,12 +43,12 @@ int main() {
         }
     }
 
-    std::for_each(nodes.begin(), nodes.end(), [](ms_node &node) {
+    for (auto &node : nodes) {
         if (node.observed) {
             node.marked = true;
             node.mark_refs();
         }
-    }); // Mark observers and connected nodes
+    } // Mark observers and connected nodes
 
     std::vector<int> garbage; // Find unmarked Nodes
     for (int i = 0; i < nodes.size(); ++i) if (!nodes[i].marked) { garbage.emplace_back(i); }
