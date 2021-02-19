@@ -102,7 +102,6 @@ public:
     }
 
     /// Removes a Node by Key and preserves its children. When deleting root, Left has precedence in becoming root.
-    /// The deleted node is not .
     void remove(T target) {
         if (target == this->get_key()) { // If Root is the target
             if (left) {
