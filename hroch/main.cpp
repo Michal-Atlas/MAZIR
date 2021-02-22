@@ -5,6 +5,7 @@
 
 #define EXPLODE_PAIRS(p) pair{p.first-1,p.second},{p.first+1,p.second},{p.first,p.second-1},{p.first,p.second+1}
 #define MAP_PAIR(p) p.second][p.first
+//#define DEBUG
 
 enum tiletype {
     WATER,
@@ -24,8 +25,9 @@ void search_island(pair start, map &map, int &max) {
     int island_max = 0;
     while (!f.empty()) {
         auto now = f.pop();
-        map[now].processed = true;
+        if (map[now].processed) { continue; }
         if (map[now].type == FOOD) { ++island_max; }
+        map[now].processed = true;
         for (auto dir : {EXPLODE_PAIRS(now)}) {
             if (map.contains(dir) && !map[dir].processed && map[dir].type != WATER) {
                 f.push(dir);
@@ -37,8 +39,8 @@ void search_island(pair start, map &map, int &max) {
 
 void search_water(fixo &buffer, map &map, int &max) {
     auto now = buffer.pop();
-    map[now].processed = true;
     if (map[now].type == WATER) {
+        map[now].processed = true;
         for (auto dir : {EXPLODE_PAIRS(now)}) {
             if (map.contains(dir) && !map[dir].processed &&
                 !((map[now].type != WATER) && map[dir].type == WATER)) {
