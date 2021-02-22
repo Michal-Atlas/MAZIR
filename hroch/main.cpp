@@ -2,63 +2,57 @@
 #include "fixo.h"
 #include <map>
 #include <vector>
-#include <stdlib.h>
+
+#define EXPLODE_PAIRS(p) pair{p.first-1,p.second},{p.first+1,p.second},{p.first,p.second-1},{p.first,p.second+1}
+#define MAP_PAIR(p) p.second][p.first
 
 enum tiletype {
     WATER,
     LAND,
-    FOOD,
-    PASSED
+    FOOD
 };
-typedef std::map<std::pair<int, int>, tiletype> map;
+struct tile {
+    tiletype type = WATER;
+    bool processed = false;
+};
+typedef std::pair<int, int> pair;
+typedef std::map<pair, tile> map;
 
-void lookaround(fixo &buffer, map &map, std::vector<std::pair<int, int>> &processed, int width, int height) {
-    auto now = buffer.pop();
-    std::pair<int, int> check = {now.first - 1, now.second};
-    if (now.first > 0 &&
-        !(map[now] == LAND && !map.contains(check)) &&
-        std::find(processed.begin(), processed.end(), check) == processed.end()) {
-        buffer.push(check);
-        processed.push_back(check);
+void search_island(pair start, map &map, int &max) {
+    queue f;
+    f.push(start);
+    int island_max = 0;
+    while (!f.empty()) {
+        auto now = f.pop();
+        map[now].processed = true;
+        if (map[now].type == FOOD) { ++island_max; }
+        for (auto dir : {EXPLODE_PAIRS(now)}) {
+            if (map.contains(dir) && !map[dir].processed && map[dir].type != WATER) {
+                f.push(dir);
+            }
+        }
     }
-    check = {now.first, now.second - 1};
-    if (now.second > 0 && !(map[now] == LAND && !map.contains(check)) &&
-        std::find(processed.begin(), processed.end(), check) == processed.end()) {
-        buffer.push(check);
-        processed.push_back(check);
-    }
-    check = {now.first + 1, now.second};
-    if (now.first < width && !(map[now] == LAND && !map.contains(check)) &&
-        std::find(processed.begin(), processed.end(), check) == processed.end()) {
-        buffer.push(check);
-        processed.push_back(check);
-    }
-    check = {now.first, now.second + 1};
-    if (now.second < height && !(map[now] == LAND && !map.contains(check)) &&
-        std::find(processed.begin(), processed.end(), check) == processed.end()) {
-        buffer.push(check);
-        processed.push_back(check);
-    }
+    if (island_max > max) { max = island_max; }
 }
 
-void printmap(map &map, std::vector<std::pair<int, int>> &processed, int width, int height) {
-    std::map<tiletype, char> tilesym = {{PASSED, '@'},
-                                        {LAND,   '#'},
-                                        {FOOD,   'F'}};
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            std::cout << (std::find(processed.begin(), processed.end(), std::pair<int, int>{x, y}) != processed.end()
-                          ? '@' : (map.contains({x, y}) ? tilesym[map[{x, y}]] : ' '));
+void search_water(fixo &buffer, map &map, int &max) {
+    auto now = buffer.pop();
+    map[now].processed = true;
+    if (map[now].type == WATER) {
+        for (auto dir : {EXPLODE_PAIRS(now)}) {
+            if (map.contains(dir) && !map[dir].processed &&
+                !((map[now].type != WATER) && map[dir].type == WATER)) {
+                buffer.push(dir);
+            }
         }
-        std::cout << std::endl;
+    } else {
+        search_island(now, map, max);
     }
 }
 
 int main() {
     map map;
     std::pair<int, int> start;
-    std::pair<int, int> now;
-    std::vector<std::pair<int, int>> processed;
     int width, height;
     { // Import Map
         std::cin >> width >> height;
@@ -68,13 +62,17 @@ int main() {
                 std::cin >> c;
                 switch (c) {
                     case 'J':
-                        map[{x, y}] = FOOD;
+                        map[{x, y}] = {FOOD};
                         break;
                     case '#':
-                        map[{x, y}] = LAND;
+                        map[{x, y}] = {LAND};
                         break;
                     case 'H':
+                        map[{x, y}] = {WATER};
                         start = {x, y};
+                        break;
+                    case '.':
+                        map[{x, y}] = {WATER};
                         break;
                     default:
                         break;
@@ -82,19 +80,14 @@ int main() {
                 }
             }
         }
-        now = start;
 
         stack f;
+        int max = 0;
         f.push(start);
-        for (int i = 0; i < 100; ++i) {
-            auto n = f.pop();
-            std::cout << std::endl << i << "[ " << n.first << ", " << n.second << " ]" << std::endl;
-            f.push(n);
-            lookaround(f, map, processed, width, height);
-            printmap(map, processed, width, height);
+        while (!f.empty()) {
+            search_water(f, map, max);
         }
-
-
+        std::cout << max;
         return 0;
     }
 }
