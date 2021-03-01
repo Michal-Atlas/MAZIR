@@ -26,7 +26,7 @@ void search_island(pair start, map &map, int &max) {
     map[start].viewed = true;
     while (!f.empty()) {
         auto now = f.pop();
-        //if (map[now].viewed) { continue; }
+
         if (map[now].type == FOOD) { ++island_max; }
 
         for (auto dir : {EXPLODE_PAIRS(now)}) {
