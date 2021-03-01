@@ -90,7 +90,7 @@ int main() {
         while (!f.empty()) {
             search_water(f, map, max);
         }
-        std::cout << max;
+        std::cout << max << std::endl;
         return 0;
     }
 }
