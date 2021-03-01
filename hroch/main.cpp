@@ -14,7 +14,7 @@ enum tiletype {
 };
 struct tile {
     tiletype type = WATER;
-    bool processed = false;
+    bool viewed = false;
 };
 typedef std::pair<int, int> pair;
 typedef std::map<pair, tile> map;
@@ -23,16 +23,16 @@ void search_island(pair start, map &map, int &max) {
     queue f;
     f.push(start);
     int island_max = 0;
-    map[start].processed = true;
+    map[start].viewed = true;
     while (!f.empty()) {
         auto now = f.pop();
-        //if (map[now].processed) { continue; }
+        //if (map[now].viewed) { continue; }
         if (map[now].type == FOOD) { ++island_max; }
 
         for (auto dir : {EXPLODE_PAIRS(now)}) {
-            if (map.contains(dir) && !map[dir].processed && map[dir].type != WATER) {
+            if (map.contains(dir) && !map[dir].viewed && map[dir].type != WATER) {
                 f.push(dir);
-                map[dir].processed = true;
+                map[dir].viewed = true;
             }
         }
     }
@@ -43,10 +43,9 @@ void search_water(fixo &buffer, map &map, int &max) {
     auto now = buffer.pop();
     if (map[now].type == WATER) {
         for (auto dir : {EXPLODE_PAIRS(now)}) {
-            if (map.contains(dir) && !map[dir].processed && // Not out of bounds
-                !((map[now].type != WATER) && map[dir].type == WATER)) { // Don't return to water rule
+            if (map.contains(dir) && !map[dir].viewed) { // Contains = Not out of bounds
                 buffer.push(dir);
-                if (map[dir].type == WATER) { map[dir].processed = true; }
+                if (map[dir].type == WATER) { map[dir].viewed = true; }
             }
         }
     } else {
