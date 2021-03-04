@@ -32,8 +32,8 @@ pub fn traverse(graph: &Vec<Node>, origin: usize) -> Vec<(Option<usize>, u64)> {
                 continue;
             }
 
-            if (heap.contains(ed.target)) {
-                if (node_distances[ed.src].1 + ed.dist < node_distances[ed.target].1) {
+            if heap.contains(ed.target) {
+                if node_distances[ed.src].1 + ed.dist < node_distances[ed.target].1 {
                     heap.decrease(ed.target, node_distances[ed.src].1 + ed.dist);
                     node_distances[ed.target] = (Some(ed.src), node_distances[ed.src].1 + ed.dist);
                 }

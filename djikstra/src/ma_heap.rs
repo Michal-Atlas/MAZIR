@@ -1,5 +1,4 @@
 use crate::ma_djikstra::Edge;
-use std::fs::read;
 
 #[derive(Clone, Debug)]
 pub struct Heap(std::vec::Vec<Edge>);
@@ -48,7 +47,7 @@ impl Heap {
     fn bubble_up(&mut self, index: usize) {
         let mut index = index;
         while index > 0 {
-            if (self.0[parent!(index)].dist > self.0[index].dist) {
+            if self.0[parent!(index)].dist > self.0[index].dist {
                 self.switch(index, parent!(index));
                 index = parent!(index);
             } else {
