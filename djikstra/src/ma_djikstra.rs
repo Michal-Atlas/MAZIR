@@ -12,37 +12,39 @@ pub struct Edge {
     pub dist: u64,
 }
 
-pub fn traverse(graph: &Vec<Node>, origin: usize, dest: usize) -> Vec<Edge> {
-    let mut crow_fly_paths: Vec<Edge> = std::vec::Vec::new();
-    let mut node_distances = vec![std::u64::MAX; graph.len()];
-    node_distances[origin] = 0;
+/// Returns a Vector of (Which node a path comes from, Length of given path from origin)
+pub fn traverse(graph: &Vec<Node>, origin: usize) -> Vec<(Option<usize>, u64)> {
+    let mut closed_nodes: Vec<usize> = std::vec::Vec::new();
+    // This keeps track of the current shortest distance to each `Node` and where it came from
+    let mut node_distances: Vec<(Option<usize>, u64)> = vec![(None, std::u64::MAX); graph.len()];
+    node_distances[origin] = (Some(0), 0);
     let mut heap = Heap::new();
     heap.insert(Edge {
         src: origin,
         target: origin,
         dist: 0,
     });
-    while !heap.empty() {
-        let processed_path = heap.extract_min().unwrap();
+    while let Some(processed_path) = heap.extract_min() {
+        // For each path in current `Node`
         for ed in &graph[processed_path.target].edges {
-            if !(crow_fly_paths.iter().any(|e| { e.target == ed.target })) {
-                if (heap.contains(ed.target)) {
-                    if (node_distances[ed.src] + ed.dist < node_distances[ed.target]) {
-                        heap.decrease(ed.target, node_distances[ed.src] + ed.dist);
-                    }
-                    node_distances[ed.target] = node_distances[ed.src] + ed.dist;
-                } else {
-                    heap.insert(Edge {
-                        src: processed_path.src,
-                        target: ed.target,
-                        dist: node_distances[ed.src] + ed.dist,
-                    });
-                    node_distances[ed.target] = node_distances[ed.src] + ed.dist;
+            // Disregard if `Node` already closed
+            if closed_nodes.contains(&ed.target) { continue; }
+
+            if (heap.contains(ed.target)) {
+                if (node_distances[ed.src].1 + ed.dist < node_distances[ed.target].1) {
+                    heap.decrease(ed.target, node_distances[ed.src].1 + ed.dist);
                 }
+                node_distances[ed.target] = (Some(ed.src), node_distances[ed.src].1 + ed.dist);
+            } else {
+                heap.insert(Edge {
+                    src: processed_path.src,
+                    target: ed.target,
+                    dist: node_distances[ed.src].1 + ed.dist,
+                });
+                node_distances[ed.target] = (Some(ed.src), node_distances[ed.src].1 + ed.dist);
             }
         }
-        crow_fly_paths.push(processed_path);
+        closed_nodes.push(processed_path.src);
     }
-    eprintln!("{:?}", crow_fly_paths);
-    crow_fly_paths
+    node_distances
 }

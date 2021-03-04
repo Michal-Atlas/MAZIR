@@ -21,18 +21,18 @@ impl Heap {
     pub fn empty(&self) -> bool { self.0.is_empty() }
     pub fn contains(&self, key: usize) -> bool { self.0.iter().any(|&e| { e.target == key }) }
     pub fn extract_min(&mut self) -> Option<Edge> {
-        if self.0.is_empty() {
+        if self.empty() {
             return None;
-        }
+        } // Heap is empty
         if self.0.len() <= 2 {
             return self.0.pop();
-        }
-        let ret = self.0[0].clone();
-        self.0[0] = self.0.pop().unwrap();
+        } // Algorithm is unneeded when only 1 item would remain
+        let ret = self.0[0].clone(); // Save returned value
+        self.0[0] = self.0.pop().unwrap(); // Move last item to first
 
         let index = 0;
         let mut cont = true;
-        while cont && index > 0 {
+        while cont && index < self.0.len() { // TODO: Add Index Updating
             cont = false;
             if self.0[left_child(index)].dist > self.0[index].dist {
                 self.switch(index, left_child(index));
@@ -42,6 +42,7 @@ impl Heap {
         }
         Some(ret)
     }
+    /// Exchanges two items in the heap, **no questions asked**
     fn switch(&mut self, x: usize, y: usize) {
         let former = self.0[x];
         self.0[x] = self.0[y];
@@ -51,11 +52,13 @@ impl Heap {
         self.0.push(p);
         let mut index = self.0.len() - 1;
         while index > 0 && self.0[parent(index)].dist > self.0[index].dist {
-            self.switch(index, parent(index));
+            self.switch(index, parent(index)); // Keeps checking if parent is bigger and switching
             index = parent(index);
         }
     }
+    /// Takes value with `key` and updates (by setting not decreasing) the `dist`
     pub fn decrease(&mut self, key: usize, dist: u64) {
         self.0.iter_mut().find(|e| { e.target == key }).unwrap().dist = dist;
+        // TODO: Add bubbling
     }
 }
