@@ -24,5 +24,5 @@ fn main() {
 
     let path = ma_djikstra::traverse(&nodes, 0);
 
-    println!("{:#?}", path);
+    println!("{:?}", path);
 }

@@ -14,7 +14,7 @@ pub struct Edge {
 
 /// Returns a Vector of (Which node a path comes from, Length of given path from origin)
 pub fn traverse(graph: &Vec<Node>, origin: usize) -> Vec<(Option<usize>, u64)> {
-    let mut closed_nodes: Vec<usize> = Vec::new();
+    let mut closed_nodes: Vec<usize> = vec![origin; 1];
     // This keeps track of the current shortest distance to each `Node` and where it came from
     let mut node_distances: Vec<(Option<usize>, u64)> = vec![(None, std::u64::MAX); graph.len()];
     node_distances[origin] = (Some(0), 0);
@@ -35,11 +35,11 @@ pub fn traverse(graph: &Vec<Node>, origin: usize) -> Vec<(Option<usize>, u64)> {
             if (heap.contains(ed.target)) {
                 if (node_distances[ed.src].1 + ed.dist < node_distances[ed.target].1) {
                     heap.decrease(ed.target, node_distances[ed.src].1 + ed.dist);
+                    node_distances[ed.target] = (Some(ed.src), node_distances[ed.src].1 + ed.dist);
                 }
-                node_distances[ed.target] = (Some(ed.src), node_distances[ed.src].1 + ed.dist);
             } else {
                 heap.insert(Edge {
-                    src: processed_path.src,
+                    src: ed.src,
                     target: ed.target,
                     dist: node_distances[ed.src].1 + ed.dist,
                 });
