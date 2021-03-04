@@ -14,7 +14,8 @@ fn main() {
     for l in stdin.lock().lines() {
         let numbers: Result<Vec<u64>, _> = l.unwrap().split_whitespace().map(str::parse).collect();
         let unumbers = numbers.unwrap();
-        nodes[unumbers[0] as usize].edges.push(Edge { // Append new Edge to appropriate Node
+        nodes[unumbers[0] as usize].edges.push(Edge {
+            // Append new Edge to appropriate Node
             src: unumbers[0] as usize,
             target: unumbers[1] as usize,
             dist: unumbers[2],
