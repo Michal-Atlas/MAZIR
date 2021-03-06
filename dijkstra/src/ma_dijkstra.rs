@@ -11,6 +11,11 @@ pub struct Edge {
     pub target: usize,
     pub dist: u64,
 }
+impl Edge {
+    pub(crate) fn new() -> Self {
+        Edge { src: 0, target: 0, dist: 0 }
+    }
+}
 
 /// Returns a Vector of (Which node a path comes from, Length of given path from origin)
 pub fn traverse(graph: &Vec<Node>, origin: usize) -> Vec<(Option<usize>, u64)> {

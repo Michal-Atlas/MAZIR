@@ -1,8 +1,8 @@
-use crate::ma_djikstra::{Edge, Node};
+use crate::ma_dijkstra::{Edge, Node};
 use std::io;
 use std::io::BufRead;
 
-mod ma_djikstra;
+mod ma_dijkstra;
 mod ma_heap;
 
 fn main() {
@@ -22,7 +22,7 @@ fn main() {
         });
     }
 
-    let path = ma_djikstra::traverse(&nodes, 0);
+    let path = ma_dijkstra::traverse(&nodes, 0);
 
     println!("{:?}", path);
 }
