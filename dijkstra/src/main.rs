@@ -22,7 +22,8 @@ fn main() {
         });
     }
 
-    let path = ma_dijkstra::traverse(&nodes, 0);
+    let traverses = ma_dijkstra::traverse(&nodes, 0);
+    //let paths = ma_dijkstra::backtrack_paths(&traverses);
 
-    println!("{:#?}\n{:?}", nodes, path);
+    println!("{:?}\n{:#?}", nodes, traverses);//, paths);
 }

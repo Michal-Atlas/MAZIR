@@ -55,3 +55,18 @@ pub fn traverse(graph: &Vec<Node>, origin: usize) -> Vec<(Option<usize>, u64)> {
     }
     node_distances
 }
+
+pub fn backtrack_paths(traverse: &Vec<(Option<usize>, u64)>) -> Vec<Vec<usize>> {
+    let mut ret: Vec<Vec<usize>> = Vec::new();
+    for p in 0..traverse.len() {
+        println!("{}", p);
+        ret.push(vec![p]);
+        let mut cursor = p;
+        while cursor != 0 && cursor != usize::MAX {
+            let src = traverse[cursor].0.unwrap_or(usize::MAX);
+            ret[p].push(src);
+            cursor = src;
+        }
+    }
+    ret
+}
