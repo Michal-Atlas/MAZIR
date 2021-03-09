@@ -24,6 +24,6 @@ fn main() {
 
     let traverses = ma_dijkstra::traverse(&nodes, 0);
     //let paths = ma_dijkstra::backtrack_paths(&traverses);
-
-    println!("{}", traverses.last().unwrap().clone().1);
+    eprintln!("{:#?}", traverses);
+    println!("{}", if traverses[1].0.is_none() {"inf".to_string()} else {traverses[1].1.to_string()});
 }
