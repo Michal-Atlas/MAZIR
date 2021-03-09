@@ -1,5 +1,5 @@
 [package]
-name = "djikstra"
+name = "dijkstra"
 version = "0.1.0"
 authors = ["Michal Atlas <michal.z.atlas@gmail.com>"]
 edition = "2018"

@@ -23,7 +23,7 @@ fn main() {
     }
 
     let traverses = ma_dijkstra::traverse(&nodes, 0);
-    let paths = ma_dijkstra::backtrack_paths(&traverses);
+    //let paths = ma_dijkstra::backtrack_paths(&traverses);
 
-    println!("{:?}\n{:?}\n{:?}", nodes, traverses, paths);
+    println!("{}", traverses.last().unwrap().clone().1);
 }
